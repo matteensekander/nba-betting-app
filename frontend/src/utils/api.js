@@ -44,3 +44,7 @@ export function getPropLines(playerName, teamAbbr) {
   const params = new URLSearchParams({ playerName, teamAbbr: teamAbbr || '' });
   return get(`/proplines?${params}`);
 }
+
+export function getGameProps(homeTeamId, awayTeamId) {
+  return get(`/game-props?homeTeamId=${homeTeamId}&awayTeamId=${awayTeamId}`);
+}
