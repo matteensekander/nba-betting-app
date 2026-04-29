@@ -18,8 +18,10 @@ export function getPlayerProfile(id) {
   return get(`/players/${id}/profile`);
 }
 
-export function getPlayerGameLog(id, year = 2025) {
-  return get(`/players/${id}/gamelog?year=${year}`);
+// year: ESPN ending year (2026 = 2025-26 season). seasontype: 2=regular, 3=playoffs
+export function getPlayerGameLog(id, year = 2026, seasontype = '') {
+  const st = seasontype ? `&seasontype=${seasontype}` : '';
+  return get(`/players/${id}/gamelog?year=${year}${st}`);
 }
 
 export function getTeams() {
@@ -32,4 +34,13 @@ export function getTeamRoster(teamId) {
 
 export function getOdds() {
   return get('/odds');
+}
+
+export function getScoreboard() {
+  return get('/scoreboard');
+}
+
+export function getPropLines(playerName, teamAbbr) {
+  const params = new URLSearchParams({ playerName, teamAbbr: teamAbbr || '' });
+  return get(`/proplines?${params}`);
 }

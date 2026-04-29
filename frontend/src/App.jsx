@@ -3,6 +3,7 @@ import TeamGrid from './components/TeamGrid';
 import RosterList from './components/RosterList';
 import PlayerCard from './components/PlayerCard';
 import OddsPanel from './components/OddsPanel';
+import LiveScoreboard from './components/LiveScoreboard';
 import SearchBar from './components/SearchBar';
 import { searchPlayers, getPlayerProfile, getPlayerGameLog } from './utils/api';
 import { parseEspnGameLog } from './utils/espnParser';
@@ -26,22 +27,30 @@ export default function App() {
     setView('player');
 
     try {
-      const [profile, rawGameLog] = await Promise.all([
+      // 2025-26 season = ESPN year 2026. Fetch regular season + playoffs in parallel.
+      const [profile, rawRegular, rawPlayoffs] = await Promise.all([
         getPlayerProfile(player.id).catch(() => null),
-        getPlayerGameLog(player.id, 2025).catch(() => null),
+        getPlayerGameLog(player.id, 2026, 2).catch(() => null),
+        getPlayerGameLog(player.id, 2026, 3).catch(() => null),
       ]);
 
-      let parsed = rawGameLog ? parseEspnGameLog(rawGameLog) : null;
+      let parsedRegular = rawRegular ? parseEspnGameLog(rawRegular) : null;
 
-      if (!parsed?.seasonAverages && !parsed?.gameLog?.length) {
-        const rawPrev = await getPlayerGameLog(player.id, 2024).catch(() => null);
-        parsed = rawPrev ? parseEspnGameLog(rawPrev) : null;
+      // Fall back to 2025 regular season if no 2026 data
+      if (!parsedRegular?.seasonAverages && !parsedRegular?.gameLog?.length) {
+        const rawPrev = await getPlayerGameLog(player.id, 2025, 2).catch(() => null);
+        parsedRegular = rawPrev ? parseEspnGameLog(rawPrev) : null;
       }
 
-      const { seasonAverages = null, gameLog = [] } = parsed || {};
+      const parsedPlayoffs = rawPlayoffs ? parseEspnGameLog(rawPlayoffs) : null;
+
+      const { seasonAverages = null, gameLog = [] } = parsedRegular || {};
+      const playoffAverages = parsedPlayoffs?.seasonAverages || null;
+      const playoffGameLog = parsedPlayoffs?.gameLog || [];
+
       const prediction = generatePrediction(seasonAverages, gameLog);
 
-      setPlayerData({ profile, averages: seasonAverages, gameLog, prediction });
+      setPlayerData({ profile, averages: seasonAverages, gameLog, prediction, playoffAverages, playoffGameLog });
     } catch (err) {
       setError(err.message || 'Failed to load player data.');
     } finally {
@@ -88,20 +97,13 @@ export default function App() {
             <span className="logo-icon">◆</span>
             <span className="logo-text">NBA<span className="logo-accent">Edge</span></span>
           </button>
-          <p className="header-subtitle">AI-Powered Player Betting Analysis</p>
+          <p className="header-subtitle">2025–26 Season · AI Betting Analysis · Live Playoff Stats</p>
         </div>
-
-        {/* Search toggle in header */}
-        <button
-          className="header-search-btn"
-          onClick={() => setShowSearch(s => !s)}
-          title="Search players"
-        >
+        <button className="header-search-btn" onClick={() => setShowSearch(s => !s)} title="Search players">
           🔍 Search Player
         </button>
       </header>
 
-      {/* Search overlay */}
       {showSearch && (
         <div className="search-overlay">
           <div className="container">
@@ -113,15 +115,14 @@ export default function App() {
       <main className="main">
         <div className="container">
 
-          {/* ── HOME: Team Grid + Odds ── */}
           {view === 'home' && (
             <>
+              <LiveScoreboard />
               <OddsPanel />
               <TeamGrid onSelectTeam={handleTeamSelect} />
             </>
           )}
 
-          {/* ── ROSTER: Players for a team ── */}
           {view === 'roster' && selectedTeam && (
             <RosterList
               team={selectedTeam}
@@ -130,10 +131,8 @@ export default function App() {
             />
           )}
 
-          {/* ── PLAYER: Stats + Prediction ── */}
           {view === 'player' && (
             <>
-              {/* Breadcrumb back navigation */}
               {selectedTeam && (
                 <div className="breadcrumb" style={{ marginBottom: 16 }}>
                   <button className="breadcrumb-back" onClick={goHome}>← All Teams</button>
@@ -147,7 +146,7 @@ export default function App() {
               {loading && (
                 <div className="loading-container">
                   <div className="spinner" />
-                  <p>Fetching live player data...</p>
+                  <p>Fetching 2025–26 season data...</p>
                 </div>
               )}
 
@@ -165,6 +164,8 @@ export default function App() {
                   averages={playerData.averages}
                   gameLog={playerData.gameLog}
                   prediction={playerData.prediction}
+                  playoffAverages={playerData.playoffAverages}
+                  playoffGameLog={playerData.playoffGameLog}
                 />
               )}
             </>

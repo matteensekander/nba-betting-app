@@ -1203,6 +1203,272 @@ body {
   font-weight: 600;
 }
 
+/* ── Live Scoreboard ────────────────────────────────────────── */
+.scoreboard-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.scoreboard-header { margin-bottom: 16px; }
+
+.scoreboard-games {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sb-game {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  min-width: 180px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sb-game-live {
+  border-color: rgba(34,197,94,0.4);
+  background: rgba(34,197,94,0.04);
+}
+
+.sb-status {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.sb-status-live { color: var(--green); }
+.sb-status-final { color: var(--text-3); }
+.sb-status-pre { color: var(--blue); }
+
+.sb-matchup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.sb-team {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sb-team-winner .sb-team-abbr,
+.sb-team-winner .sb-score { color: var(--text-1); }
+
+.sb-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sb-team-abbr {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.sb-score {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-2);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.sb-at {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.sb-series {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ── Prop Lines (Fliff / Underdog style) ────────────────────── */
+.proplines-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.proplines-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.proplines-game-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--blue-dim);
+  border: 1px solid rgba(91,115,255,0.3);
+  padding: 4px 12px;
+  border-radius: 99px;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.proplines-loading {
+  font-size: 13px;
+  color: var(--text-3);
+  padding: 8px 0;
+}
+
+.proplines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.propline-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s;
+}
+
+.propline-over { border-color: rgba(34,197,94,0.45); background: rgba(34,197,94,0.06); }
+.propline-under { border-color: rgba(239,68,68,0.45); background: rgba(239,68,68,0.06); }
+.propline-neutral { border-color: var(--border); }
+
+.propline-stat {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.propline-line {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 900;
+  color: var(--text-1);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.propline-avg {
+  font-size: 12px;
+  color: var(--text-2);
+}
+.propline-avg strong { color: var(--text-1); font-weight: 700; }
+
+.propline-lean {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+.propline-lean-over { color: var(--green); }
+.propline-lean-under { color: var(--red); }
+.propline-lean-neutral { color: var(--text-3); }
+
+.propline-diff {
+  font-size: 10px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.propline-odds {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.propline-book {
+  font-size: 10px;
+  color: var(--text-3);
+  opacity: 0.6;
+}
+
+/* ── Season toggle ──────────────────────────────────────────── */
+.season-toggle {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.season-toggle-btn {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.season-toggle-btn:hover:not(.disabled) { border-color: var(--blue); color: var(--text-1); }
+.season-toggle-btn.active {
+  background: var(--blue-dim);
+  border-color: rgba(91,115,255,0.5);
+  color: var(--blue);
+}
+.season-toggle-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Playoff banner ─────────────────────────────────────────── */
+.playoff-banner {
+  background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(249,115,22,0.08));
+  border: 1px solid rgba(245,158,11,0.35);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--yellow);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.playoff-gp {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
 /* ── Animations ─────────────────────────────────────────────── */
 @keyframes spin {
   to { transform: rotate(360deg); }
